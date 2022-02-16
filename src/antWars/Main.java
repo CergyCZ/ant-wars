@@ -1,4 +1,4 @@
-package antWWars;
+package antWars;
 
 public class Main {
 
