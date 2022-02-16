@@ -137,7 +137,7 @@ public class Deck {
 	
 	
 	/**
-	 * returns card on top of deck
+	 * returns reference to card on top of deck
 	 * @return Top card from deck or Null if the Deck is empty.
 	 */
 	public AWCard topCard() {
