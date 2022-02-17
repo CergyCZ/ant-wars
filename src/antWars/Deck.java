@@ -79,7 +79,7 @@ public class Deck {
 	}
 	
 	/**
-	 * Static method to move Card from One deck to another
+	 * Static method to move Card from One deck to another, to the bottom
 	 * @param fromDeck Original Deck with card to be moved from.
 	 * @param toDeck Target deck.
 	 * @param card Card to be moved
@@ -93,6 +93,8 @@ public class Deck {
 		}
 		else return false;
 	}
+	
+	
 	/**
 	 * Move card from instance of the deck to another deck
 	 * @param toDeck Target deck
@@ -105,6 +107,7 @@ public class Deck {
 	
 	/**
 	 * Find out if deck contains certain card by its id
+	 * Usable only for card with same id, not parameters or type
 	 * @param cardId ID of card
 	 * @return true if contains.
 	 */
@@ -120,7 +123,7 @@ public class Deck {
 	 * @param card Card
 	 * @return true id contains
 	 */
-	public boolean containsCard(AWCard card) {
+	public boolean containsCard(AWCard card) { //TODO zjistit, jestli neni potreba u karty upravit equals nebo tak neco
 		return deckArrayList.contains(card);
 	}
 	
@@ -140,9 +143,21 @@ public class Deck {
 	 * returns reference to card on top of deck
 	 * @return Top card from deck or Null if the Deck is empty.
 	 */
-	public AWCard topCard() {
+	public AWCard revealTopCard() {
 		if(deckArrayList.size() > 0) return deckArrayList.get(0);
 		else return null;
+	}
+	
+	/**
+	 * return card at top position and removes it from deck
+	 * @return
+	 */
+	public AWCard passTopCard() {
+		return this.passCard(0);
+	}
+	
+	public int getSize() {
+		return deckArrayList.size();
 	}
 
 }

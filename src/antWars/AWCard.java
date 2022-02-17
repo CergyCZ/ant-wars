@@ -35,6 +35,12 @@ public class AWCard {
 	public int getPower() {
 		return power;
 	}
+
+
+	@Override
+	public String toString() {
+		return "AWCard [id=" + id + ", type=" + type + ", power=" + power + "]";
+	}
 	
 	
 	
