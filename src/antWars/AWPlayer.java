@@ -48,14 +48,67 @@ public class AWPlayer {
 
 	@Override
 	public String toString() {
-		return "Player status: Current base HP: " + base.getCurrentHP() + ", hand size: " + hand.getSize() + 
-				", deck size: " + deck.getSize() + ", discard size: " + discardPile.getSize();
+		return "Player status: Current base HP:" + base.getCurrentHP() + ", hand size:" + hand.getSize() + 
+				", deck size:" + deck.getSize() + ", discard size:" + discardPile.getSize() + ", defenders: " 
+				+ defenders.getSize();
 	}
 	
 	public void showHand() {
 		for(AWCard c: hand.getDeck()) {
 			System.out.println(c.toString());
 		}
+	}
+	
+	public boolean playDefenderFromHand(int handPosition) {
+		AWCard c = hand.getCardAtPosition(handPosition);
+		if(c != null) {
+			if(c.getType() == AWCardType.DEFENSE) {
+				Deck.moveCard(hand, defenders, c);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public int playAttacFromHand(int handPosition) {
+		AWCard c = hand.getCardAtPosition(handPosition);
+		if(c != null) {
+			if(c.getType() == AWCardType.ATTACK) {
+				Deck.moveCard(hand, discardPile, c);
+				return c.getPower();
+			}
+		}
+		return 0;
+	}
+	
+	public void defend(int attPower, int defenderPosition) {
+		if(attPower > 0 && defenders.getSize() == 0) {
+			defend(attPower);
+		}
+		if(attPower > 0 && defenderPosition < defenders.getSize()) {
+			AWCard defender = defenders.getCardAtPosition(defenderPosition);
+			int damage = attPower - defender.getPower();
+			if(damage < 0) {
+				System.out.println("Damage deflected by defender");
+			}
+			if(damage >= 0) {
+				defenders.removeCard(defender); //destroyed defender is not going to discard pile.
+				System.out.println("Defender destroyed");
+			}
+			if(damage > 0) {
+				defend(damage);
+			}
+		}
+		else {System.out.println("nothing happened");}
+	}
+	
+	public void defend(int attPower) {
+		if(attPower > 0) {
+			System.out.println("Defender's base suffered " + attPower + " damage.");
+			base.alterCurrentHP(attPower*-1);
+		}
+		else {System.out.println("No damage suffered");}
 	}
 	
 	

@@ -159,5 +159,12 @@ public class Deck {
 	public int getSize() {
 		return deckArrayList.size();
 	}
+	
+	public AWCard getCardAtPosition(int deckPosition) {
+		if(deckPosition < deckArrayList.size()) {
+			return deckArrayList.get(deckPosition);
+		}
+		else return null;
+	}
 
 }
