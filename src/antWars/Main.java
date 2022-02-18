@@ -21,22 +21,12 @@ public class Main {
 		
 		System.out.println("Ant Wars Game Starting.");
 		
+		//TODO lizani karet z central decku.
 		
-		System.out.println(player1.toString());
 		
-		player1.showHand();
-		System.out.println();
-		
-		player2.showHand();
-		
-		player1.playDefenderFromHand(0);
-		System.out.println(player1.toString());
-		
-		int tmpAttack = player2.playAttacFromHand(0);
-		player1.defend(tmpAttack, 0);
-		System.out.println(player1.toString());
 		
 		//gameloop
+		
 //		while(player1.getBase().isAlive() && player2.getBase().isAlive()) {
 //			
 //		}

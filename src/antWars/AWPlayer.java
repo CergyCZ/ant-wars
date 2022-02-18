@@ -29,7 +29,39 @@ public class AWPlayer {
 		
 		
 	}
+	public void drawACard() {
+		if(deck.getSize() > 0) {
+			hand.addCard(deck.passTopCard());
+		}
+		else if(deck.getSize() == 0 && discardPile.getSize() > 0) {
+			shuffleDiscardIntoDeck();
+		}
+		else {
+			System.out.println("There are no cards to draw.");
+		}
+	}
+	
+	public boolean recieveCardToDiscardPile(AWCard c) {
+		if(c != null) {
+			discardPile.addCard(c);
+			return true;
+		}
+		return false;
+	}
+	
+	public void drawACard(int x) {
+		for(int i = 0; i <= x;i++) {
+			drawACard();
+		}
+	}
 
+	public void shuffleDiscardIntoDeck() {
+		while(discardPile.getSize() > 0) {
+			deck.addCard(discardPile.passTopCard());
+		}
+		deck.shuffleDeck();
+		
+	}
 	public Deck getDeck() {
 		return deck;
 	}
@@ -71,7 +103,7 @@ public class AWPlayer {
 		return false;
 	}
 	
-	public int playAttacFromHand(int handPosition) {
+	public int playAttackFromHand(int handPosition) {
 		AWCard c = hand.getCardAtPosition(handPosition);
 		if(c != null) {
 			if(c.getType() == AWCardType.ATTACK) {
