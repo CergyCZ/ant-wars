@@ -55,7 +55,7 @@ public class AWPlayer {
 	}
 	
 	public void drawACard(int x) {
-		for(int i = 0; i <= x;i++) {
+		for(int i = 0; i < x;i++) {
 			drawACard();
 		}
 	}
@@ -123,33 +123,39 @@ public class AWPlayer {
 		return 0;
 	}
 	
-	public void defend(int attPower, int defenderPosition) {
+	public boolean defend(int attPower, int defenderPosition) {
 		if(attPower > 0 && defenders.getSize() == 0) {
-			defend(attPower);
+			return defend(attPower);
 		}
 		else if(attPower > 0 && defenderPosition < defenders.getSize()) {
 			AWCard defender = defenders.getCardAtPosition(defenderPosition);
 			int damage = attPower - defender.getPower();
 			if(damage < 0) {
 				System.out.println("Damage deflected by defender");
+				return false;
 			}
 			if(damage >= 0) {
 				defenders.removeCard(defender); //destroyed defender is not going to discard pile.
 				System.out.println("Defender destroyed");
 			}
 			if(damage > 0) {
-				defend(damage);
+				return defend(damage);
 			}
 		}
-		else {System.out.println("nothing happened");}
+		System.out.println("nothing happened");
+		return false;
 	}
 	
-	public void defend(int attPower) {
+	public boolean defend(int attPower) {
 		if(attPower > 0) {
 			System.out.println("Defender's base suffered " + attPower + " damage.");
 			base.alterCurrentHP(attPower*-1);
+			return true;
 		}
-		else {System.out.println("No damage suffered");}
+		else {
+			System.out.println("No damage suffered");
+			return false;
+			}
 	}
 	
 	

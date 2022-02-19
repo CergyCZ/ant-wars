@@ -1,7 +1,5 @@
 package antWars;
 
-import java.util.ArrayList;
-
 public class Main {
 
 
@@ -13,7 +11,7 @@ public class Main {
 		final int INITHP = 30;
 		final int HANDLIMIT = 5;
 		
-		IDManager idm = IDManager.getInstance();
+		//IDManager idm = IDManager.getInstance();
 		AWPlayer player1 = new AWPlayer("Franta", INITHP);
 		AWPlayer player2 = new AWPlayer("Pepa", INITHP);
 		Deck centralDeck = new Deck();
@@ -21,7 +19,7 @@ public class Main {
 		
 		AWCardLoader loader = new AWCardLoader();
 		centralDeck = loader.centralDeckStartingCards;
-		
+		centralDeck.shuffleDeck();
 		
 		System.out.println("Ant Wars Game Starting.");
 		
@@ -30,10 +28,48 @@ public class Main {
 		AWPlayer defendingPlayer = player2;
 		while(player1.getBase().isAlive() && player2.getBase().isAlive()) {
 			
-			attackingPlayer.recieveCardToDiscardPile(centralDeck.passTopCard());
+			System.out.println(attackingPlayer.toString());
+			
+			//draw 2
 			attackingPlayer.drawACard(2);
-			attackingPlayer.playDefenderFromHand(0);
-			defendingPlayer.defend(attackingPlayer.playAttackFromHand(0), defendingPlayer.getDefenders().getSize() - 1);
+			
+			
+			//play a defender from hand
+			int tmpHandPosition = 0;
+			boolean tmpDefenderPlayed = false;
+			while(tmpHandPosition <= attackingPlayer.getHand().getSize() && !tmpDefenderPlayed) {
+				tmpDefenderPlayed = attackingPlayer.playDefenderFromHand(tmpHandPosition);
+				tmpHandPosition++;
+				
+				if(tmpDefenderPlayed) {
+					System.out.println("defender played.");
+				}
+			}
+			
+			
+			//play an attack from hand
+			tmpHandPosition = 0;
+			boolean tmpAttackPlayed = false;
+			boolean defenderSufferedDamage = false;
+			while(tmpHandPosition <= attackingPlayer.getHand().getSize() && !tmpAttackPlayed) {
+				
+				if(attackingPlayer.getHand().getCardAtPosition(tmpHandPosition).getType() == AWCardType.ATTACK) {
+				  int attPower = attackingPlayer.playAttackFromHand(tmpHandPosition);
+				  int defenderPos = defendingPlayer.getDefenders().getSize() - 1;
+				  defenderSufferedDamage = defendingPlayer.defend(attPower, defenderPos);
+				  tmpAttackPlayed = true;
+				  
+				  
+				}
+				else tmpHandPosition++;
+			}
+			
+			if(defenderSufferedDamage) {
+				defendingPlayer.recieveCardToDiscardPile(centralDeck.passTopCard());
+			}
+			
+			
+			//handlimit check
 			while(attackingPlayer.checkHandLimit(HANDLIMIT)) {
 				AWCard c = attackingPlayer.getHand().passTopCard();
 				attackingPlayer.getDiscardPile().addCard(c);
@@ -50,8 +86,8 @@ public class Main {
 				attackingPlayer = player1;
 				defendingPlayer = player2;
 			}
-			System.out.println(attackingPlayer.toString());
-			System.out.println(defendingPlayer.toString());
+//			System.out.println(attackingPlayer.toString());
+			//System.out.println(defendingPlayer.toString());
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -62,4 +98,6 @@ public class Main {
 		
 		
 	}
+	
 }
+
