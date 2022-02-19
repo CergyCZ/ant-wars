@@ -7,13 +7,15 @@ public class AWPlayer {
 	private Deck discardPile;
 	private Deck defenders;
 	private Base base;
+	private String name;
+	final int INIT_HAND_SIZE = 3;
 	
 	private AWCardLoader loader;
 	
-	public AWPlayer(int hp) {
+	public AWPlayer(String name, int hp) {
 		
-		final int INIT_HAND_SIZE = 3;
 		
+		this.name = name;
 		loader = new AWCardLoader();
 		deck = loader.loadPlayerStartingCards();
 		deck.shuffleDeck();
@@ -24,11 +26,14 @@ public class AWPlayer {
 		
 		for(int i = 0; i < INIT_HAND_SIZE; i++) {
 			hand.addCard(deck.passTopCard());
-		}
-		
-		
+			}
 		
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
 	public void drawACard() {
 		if(deck.getSize() > 0) {
 			hand.addCard(deck.passTopCard());
@@ -65,7 +70,11 @@ public class AWPlayer {
 	public Deck getDeck() {
 		return deck;
 	}
-
+	
+	public Deck getHand() {
+		return hand;
+	}
+	
 	public Deck getDiscardPile() {
 		return discardPile;
 	}
@@ -80,7 +89,7 @@ public class AWPlayer {
 
 	@Override
 	public String toString() {
-		return "Player status: Current base HP:" + base.getCurrentHP() + ", hand size:" + hand.getSize() + 
+		return name + ": Current base HP:" + base.getCurrentHP() + ", hand size:" + hand.getSize() + 
 				", deck size:" + deck.getSize() + ", discard size:" + discardPile.getSize() + ", defenders: " 
 				+ defenders.getSize();
 	}
@@ -118,7 +127,7 @@ public class AWPlayer {
 		if(attPower > 0 && defenders.getSize() == 0) {
 			defend(attPower);
 		}
-		if(attPower > 0 && defenderPosition < defenders.getSize()) {
+		else if(attPower > 0 && defenderPosition < defenders.getSize()) {
 			AWCard defender = defenders.getCardAtPosition(defenderPosition);
 			int damage = attPower - defender.getPower();
 			if(damage < 0) {
@@ -143,6 +152,18 @@ public class AWPlayer {
 		else {System.out.println("No damage suffered");}
 	}
 	
+	
+	/**
+	 * checks hand size limit. 
+	 * @param limit false if hand is below or equal to limit
+	 * @return
+	 */
+	public boolean checkHandLimit(int limit) {
+		if(hand.getSize() <= limit) {
+			return false;
+		}
+		else return true;
+	}
 	
 	
 	
