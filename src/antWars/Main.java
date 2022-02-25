@@ -31,17 +31,33 @@ public class Main {
 		AWPlayer defendingPlayer = player2;
 		while(player1.getBase().isAlive() && player2.getBase().isAlive()) {
 			
-			System.out.println(attackingPlayer.toString());
+			
 			
 			//draw 2
 			attackingPlayer.drawACard(2);
+			
+			//play defender
+			System.out.println(attackingPlayer.toString());
 			System.out.println(attackingPlayer.getName() + "'s cards in hand:");
 			attackingPlayer.showHand();
 			System.out.println("Want to play a defender? Please give card's number. Or 0 to continue");
-			int tmpHandPos = input.nextInt() - 1;
-			if(tmpHandPos < 0 || tmpHandPos > attackingPlayer.getHand().getSize() - 1) {
-				System.out.println("Wrong input. Please give a number from card's numbers above or 0");
+			boolean isDefender = false;
+			int tmpHandPos = - 1;
+			
+			while(!isDefender) {
+				tmpHandPos = input.nextInt() - 1;
+				while(tmpHandPos < 0 || tmpHandPos > attackingPlayer.getHand().getSize() - 1) {
+					System.out.println("Wrong input. Please give a number from card's numbers above or 0");
+					tmpHandPos = input.nextInt() - 1;
+				}
+				if(attackingPlayer.getHand().getCardAtPosition(tmpHandPos).getType() == AWCardType.DEFENSE) {
+					isDefender = true;
+				}
+				else {
+					System.out.println("Selected card is not a defender");
+				}
 			}
+			
 			attackingPlayer.playDefenderFromHand(tmpHandPos);
 			
 			
@@ -54,6 +70,8 @@ public class Main {
 //				
 //			}
 			
+			
+			//attack
 			System.out.println(attackingPlayer.getName() + "'s cards in hand:");
 			attackingPlayer.showHand();
 			boolean defenderSufferedDamage = false;
@@ -66,14 +84,19 @@ public class Main {
 			tmpHandPos = input.nextInt() - 1;
 			int tmpTargetDefender = input.nextInt() - 1;
 			
-			if(tmpHandPos < 0 || tmpHandPos > attackingPlayer.getHand().getSize() - 1) {
+			
+			
+			while(tmpHandPos < 0 || tmpHandPos > attackingPlayer.getHand().getSize() - 1) {
 				System.out.println("Wrong input on Attacking cards. Please give a number from card's numbers above or 0");
+				tmpHandPos = input.nextInt() - 1;
 			}
-			if(tmpTargetDefender < 0 || tmpTargetDefender> defendingPlayer.getDefenders().getSize() - 1) {
+
+			while(tmpTargetDefender < -1 || tmpTargetDefender > defendingPlayer.getDefenders().getSize() - 1) {
 				System.out.println("Wrong input on defender. Please give a number from card's numbers above or 0");
+				tmpTargetDefender = input.nextInt() - 1;
 			}
 			
-			if(tmpHandPos >= 0) {
+			if(tmpHandPos > 0) {
 				int attPower = attackingPlayer.playAttackFromHand(tmpHandPos);
 				defenderSufferedDamage = defendingPlayer.defend(attPower, tmpTargetDefender);
 			}
