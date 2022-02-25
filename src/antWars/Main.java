@@ -1,5 +1,7 @@
 package antWars;
 
+import java.util.Scanner;
+
 public class Main {
 
 
@@ -15,6 +17,7 @@ public class Main {
 		AWPlayer player1 = new AWPlayer("Franta", INITHP);
 		AWPlayer player2 = new AWPlayer("Pepa", INITHP);
 		Deck centralDeck = new Deck();
+		Scanner input = new Scanner(System.in);
 		
 		
 		AWCardLoader loader = new AWCardLoader();
@@ -32,38 +35,70 @@ public class Main {
 			
 			//draw 2
 			attackingPlayer.drawACard(2);
+			System.out.println(attackingPlayer.getName() + "'s cards in hand:");
+			attackingPlayer.showHand();
+			System.out.println("Want to play a defender? Please give card's number. Or 0 to continue");
+			int tmpHandPos = input.nextInt() - 1;
+			if(tmpHandPos < 0 || tmpHandPos > attackingPlayer.getHand().getSize() - 1) {
+				System.out.println("Wrong input. Please give a number from card's numbers above or 0");
+			}
+			attackingPlayer.playDefenderFromHand(tmpHandPos);
 			
 			
 			//play a defender from hand
-			int tmpHandPosition = 0;
-			boolean tmpDefenderPlayed = false;
-			while(tmpHandPosition <= attackingPlayer.getHand().getSize() && !tmpDefenderPlayed) {
-				tmpDefenderPlayed = attackingPlayer.playDefenderFromHand(tmpHandPosition);
-				tmpHandPosition++;
-				
-				if(tmpDefenderPlayed) {
-					System.out.println("defender played.");
-				}
+//			int tmpHandPosition = 0;
+//			boolean tmpDefenderPlayed = false;
+//			while(tmpHandPosition <= attackingPlayer.getHand().getSize() && !tmpDefenderPlayed) {
+//				tmpDefenderPlayed = attackingPlayer.playDefenderFromHand(tmpHandPosition);
+//				tmpHandPosition++;
+//				
+//			}
+			
+			System.out.println(attackingPlayer.getName() + "'s cards in hand:");
+			attackingPlayer.showHand();
+			boolean defenderSufferedDamage = false;
+			System.out.println("Choose attack card and target:");
+			System.out.println();
+			if(defendingPlayer.showDefenders() == 0) {
+				System.out.println("No defense, attack opponent's base directly. Input 0 for base attack.");
+			}
+			tmpHandPos = -1;
+			tmpHandPos = input.nextInt() - 1;
+			int tmpTargetDefender = input.nextInt() - 1;
+			
+			if(tmpHandPos < 0 || tmpHandPos > attackingPlayer.getHand().getSize() - 1) {
+				System.out.println("Wrong input on Attacking cards. Please give a number from card's numbers above or 0");
+			}
+			if(tmpTargetDefender < 0 || tmpTargetDefender> defendingPlayer.getDefenders().getSize() - 1) {
+				System.out.println("Wrong input on defender. Please give a number from card's numbers above or 0");
+			}
+			
+			if(tmpHandPos >= 0) {
+				int attPower = attackingPlayer.playAttackFromHand(tmpHandPos);
+				defenderSufferedDamage = defendingPlayer.defend(attPower, tmpTargetDefender);
 			}
 			
 			
 			//play an attack from hand
-			tmpHandPosition = 0;
-			boolean tmpAttackPlayed = false;
-			boolean defenderSufferedDamage = false;
-			while(tmpHandPosition <= attackingPlayer.getHand().getSize() && !tmpAttackPlayed) {
-				
-				if(attackingPlayer.getHand().getCardAtPosition(tmpHandPosition).getType() == AWCardType.ATTACK) {
-				  int attPower = attackingPlayer.playAttackFromHand(tmpHandPosition);
-				  int defenderPos = defendingPlayer.getDefenders().getSize() - 1;
-				  defenderSufferedDamage = defendingPlayer.defend(attPower, defenderPos);
-				  tmpAttackPlayed = true;
-				  
-				  
-				}
-				else tmpHandPosition++;
-			}
+//			tmpHandPosition = 0;
+//			boolean tmpAttackPlayed = false;
+//			boolean defenderSufferedDamage = false;
+//			while(tmpHandPosition <= attackingPlayer.getHand().getSize() && !tmpAttackPlayed) {
+//				
+//				if(attackingPlayer.getHand().getCardAtPosition(tmpHandPosition).getType() == AWCardType.ATTACK) {
+//				  int attPower = attackingPlayer.playAttackFromHand(tmpHandPosition);
+//				  int defenderPos = defendingPlayer.getDefenders().getSize() - 1;
+//				  defenderSufferedDamage = defendingPlayer.defend(attPower, defenderPos);
+//				  tmpAttackPlayed = true;
+//				  
+//				  
+//				  
+//				}
+//				else tmpHandPosition++;
+//			}
+//			
 			
+			//upkeep
 			if(defenderSufferedDamage) {
 				defendingPlayer.recieveCardToDiscardPile(centralDeck.passTopCard());
 			}
@@ -85,14 +120,6 @@ public class Main {
 			else {
 				attackingPlayer = player1;
 				defendingPlayer = player2;
-			}
-//			System.out.println(attackingPlayer.toString());
-			//System.out.println(defendingPlayer.toString());
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 		

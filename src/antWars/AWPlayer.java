@@ -94,10 +94,20 @@ public class AWPlayer {
 				+ defenders.getSize();
 	}
 	
-	public void showHand() {
+	public int showHand() {
+		int i = 0;
 		for(AWCard c: hand.getDeck()) {
-			System.out.println(c.toString());
+			System.out.println(++i + ": " + c.toString());
 		}
+		return i;
+	}
+	
+	public int showDefenders() {
+		int i = 0;
+		for(AWCard c: defenders.getDeck()) {
+			System.out.println(++i + ": " + c.toString());
+		}
+		return i;
 	}
 	
 	public boolean playDefenderFromHand(int handPosition) {
@@ -139,7 +149,7 @@ public class AWPlayer {
 				System.out.println("Defender destroyed");
 			}
 			if(damage > 0) {
-				return defend(damage);
+				//return defend(damage);
 			}
 		}
 		System.out.println("nothing happened");
